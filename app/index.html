@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html ng-app="belatrix">
+  <head>
+    <meta charset="utf-8">
+    <title>Belatrix - Angular Training</title>
+    <link rel="stylesheet" href="/css/main.css" media="screen" title="no title" charset="utf-8">
+  </head>
+  <body>
+    <h1>Belatrix - Angular Training</h1>
+      <div ng-controller="listController as list">
+      <ul>
+        <li ng-repeat="user in list.names">{{user.name}} - <button type="button" name="button" ng-click="list.removeName(user.name)">x</button></li>
+      </ul>
+      <input type="text" ng-model="list.newName" name="name" value="" placeholder="Add a Name">
+      <button type="button" name="button" ng-click="list.addName(list.newName)">Add Name</button>
+    </div>
+  </body>
+  <script type="text/javascript" src="lib/angular/angular.min.js"></script>
+  <script type="text/javascript" src="js/app.js"></script>
+</html>

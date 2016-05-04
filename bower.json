@@ -1,0 +1,26 @@
+{
+  "name": "angular-training",
+  "description": "belatrix angularjs basics traning",
+  "main": "index.html",
+  "keywords": [
+    "angularjs",
+    "bower"
+  ],
+  "authors": [
+    "hdesouza@belatrixsf.com",
+    "nferro@belatrixsf.com"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.5",
+    "pure": "purecss#^0.6.0"
+  }
+}
