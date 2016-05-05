@@ -3,6 +3,13 @@
  'use strict'
   var weatherModule = angular.module('weatherModule', [])
 
+  weatherModule.filter('kelvinToCelsius', function() {
+    return function(input) {
+      console.log(input)
+      return input -273.15;
+    };
+  });
+
   weatherModule.factory('openWeatherService', function($http){
     var apiKey = 'af95bc4e30710dff7080cfb67eadba30'
     var apiUrl = 'http://api.openweathermap.org/data/2.5/weather'
