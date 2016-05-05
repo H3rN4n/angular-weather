@@ -1,18 +1,41 @@
 <!DOCTYPE html>
-<html ng-app="belatrix">
+<html ng-app="weatherModule">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Belatrix - Angular Training</title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/main.css" media="screen" title="no title" charset="utf-8">
   </head>
   <body>
-    <h1>Belatrix - Angular Training</h1>
-      <div ng-controller="listController as list">
-      <ul>
-        <li ng-repeat="user in list.names">{{user.name}} - <button type="button" name="button" ng-click="list.removeName(user.name)">x</button></li>
-      </ul>
-      <input type="text" ng-model="list.newName" name="name" value="" placeholder="Add a Name">
-      <button type="button" name="button" ng-click="list.addName(list.newName)">Add Name</button>
+    <div class="container">
+      <div class="page-header">
+        <h1>BelatrixSF Wheather</small></h1>
+      </div>
+      <div class="well">
+        <div ng-controller="listController as list">
+          <ul class="list-group">
+            <li class="list-group-item" ng-repeat="place in list.places">
+              <div class="input-group">
+                {{place.name}} - {{place.state}} - {{place.current}} - {{place.min}} - {{place.max}} -
+                <div class="input-group-btn">
+                  <button class="btn btn-danger btn-small" type="button" name="button" ng-click="list.removePlace(place.name)">x</button>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <form class="form">
+              <fieldset>
+                <div class="input-group">
+                  <input type="text" ng-model="list.newPlace" name="name" value="" class="form-control" placeholder="Add a Name">
+                  <div class="input-group-btn">
+                    <button type="button" name="button" class="btn btn-error btn-success" ng-click="list.addPlace(list.newPlace)">Add Name</button>
+                  </div>
+                </div>
+              </fieldset>
+          </form>
+        </div>
+      </div>
     </div>
   </body>
   <script type="text/javascript" src="lib/angular/angular.min.js"></script>

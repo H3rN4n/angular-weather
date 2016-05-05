@@ -20,7 +20,6 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "^1.5.5",
-    "pure": "purecss#^0.6.0"
+    "angular": "^1.5.5"
   }
 }
