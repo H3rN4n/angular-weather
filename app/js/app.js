@@ -5,7 +5,6 @@
 
   weatherModule.filter('kelvinToCelsius', function() {
     return function(input) {
-      console.log(input)
       return input -273.15;
     };
   });
@@ -33,12 +32,21 @@
   })
 
   weatherModule.factory('placesFactory', function(openWeatherService){
-
-    var InitialPlaces = ['Buenos Aires','Mendoza','Lima','San Francisco']
     var places = []
 
-    return {
+    var isDuplicate = function(placeName){
+      var result = places.filter(function(obj){
+        return obj.name == placeName
+      })
+      if(!result.length){
+        result = false
+      } else {
+        result = true
+      }
+      return result
+    }
 
+    return {
       getPlaces: function(){return places},
       removePlace: function(placeName){
         places = places.filter(function(obj){
@@ -47,10 +55,7 @@
         return this.getPlaces()
       },
       addPlace: function(placeName){
-        var isDuplicate = places.filter(function(obj){
-          return obj.name == placeName
-        })
-        if (!isDuplicate.length && placeName) {
+        if (placeName &&!isDuplicate(placeName)) {
           return openWeatherService.getWeatherByCityName(placeName)
            .then(function(response){
              places.push({
@@ -76,6 +81,12 @@
 
   weatherModule.controller('listController', function(placesFactory){
     var list = this
+    var initialPlaces = ['Buenos Aires','Mendoza','Lima','San Francisco']
+
+    for (var i = 0; i < initialPlaces.length; i++) {
+      placesFactory.addPlace(initialPlaces[i])
+    }
+
     list.places = placesFactory.getPlaces();
     list.addPlace = function(place){
       placesFactory.addPlace(place).then(function(response) {
@@ -83,6 +94,7 @@
       })
       list.newPlace = ""
     }
+
     list.removePlace = function(place){
       list.places = placesFactory.removePlace(place)
     }
