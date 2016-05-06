@@ -1,7 +1,7 @@
 (function(){
 
  'use strict'
-  var weatherModule = angular.module('weatherModule', ['geolocation', 'angularMoment', 'ui.bootstrap', 'ngTouch'])
+  var weatherModule = angular.module('weatherModule', ['geolocation', 'angularMoment', 'ui.bootstrap', 'ngTouch','ngAnimate'])
 
   weatherModule.factory('openWeatherService', function($http){
     var apiKey = 'af95bc4e30710dff7080cfb67eadba30'
