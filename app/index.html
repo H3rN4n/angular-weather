@@ -1,49 +1,82 @@
 <!DOCTYPE html>
 <html ng-app="weatherModule">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Belatrix - Angular Training</title>
-    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/main.css" media="screen" title="no title" charset="utf-8">
-  </head>
-  <body>
-    <div class="container">
-      <div class="page-header">
-        <h1>BelatrixSF Wheather</small></h1>
-      </div>
-      <div class="well">
-        <div ng-controller="listController as list">
-          <ul class="list-group">
-            <li class="list-group-item" ng-repeat="place in list.places">
-              <div class="input-group">
-                {{place.name}} - {{place.state}} - {{place.current | number:1}} - {{place.min | number:1}} - {{place.max | number:1}}
-                <ul>
-                  <li ng-repeat="day in place.forecast" ng-hide="$index == 0">{{day.dt * 1000 | amDateFormat: 'dddd' | limitTo: 3}} - {{day.temp.min}} - {{day.temp.max}}</li>
-                </ul>
-                <div class="input-group-btn">
-                  <button class="btn btn-danger btn-small" type="button" name="button" ng-click="list.removePlace(place.name)">x</button>
-                </div>
-              </div>
-            </li>
-          </ul>
-          <form class="form">
-              <fieldset>
-                <div class="input-group">
-                  <input type="text" ng-model="list.newPlace" name="name" value="" class="form-control" placeholder="Add a Name">
-                  <div class="input-group-btn">
-                    <button type="button" name="button" class="btn btn-error btn-success" ng-click="list.addPlace(list.newPlace)">Add Name</button>
-                  </div>
-                </div>
-              </fieldset>
-          </form>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Belatrix - Angular Training</title>
+  <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href=" lib/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="lib/weather-icons/css/weather-icons.css">
+  <link rel="stylesheet" type="text/css" hreqf="css/animate.css">
+  <link rel="stylesheet" href="css/style.css" media="screen" title="no title" charset="utf-8">
+</head>
+<body>
+  <header ng-controller="headerController">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xs-4 text-left">
+          <div class="location"><i class="fa fa-location-arrow fa-4x" aria-hidden="true"></i></div>
+        </div>
+        <div class="col-xs-4">
+
+        </div>
+        <div class="col-xs-4 text-right">
+          <i class="fa fa-bars fa-4x" aria-hidden="true" ng-click="show()"></i>
         </div>
       </div>
     </div>
-  </body>
-  <script type="text/javascript" src="lib/angular/angular.min.js"></script>
-  <script type="text/javascript" src="lib/angularjs-geolocation/dist/angularjs-geolocation.min.js"></script>
-  <script type="text/javascript" src="lib/moment/moment.js"></script>
-  <script type="text/javascript" src="lib/angular-moment/angular-moment.js"></script>
-  <script type="text/javascript" src="js/app.js"></script>
+  </header>
+  <aside id="menu" class="{{$root.showMenu.class}}" ng-include="'menu.html'">
+  </aside>
+  <section id="background" ng-controller="listController as list" ng-init="list.initPlaces()">
+    <uib-carousel active="active">
+      <uib-slide ng-repeat="place in list.places" index="$index">
+        <div class="blur" style="background-image: url('/img/ba.jpg')"></div>
+        <div class="weather">
+          <div class="container">
+            <div class="row">
+              <div class="col-xs-12 text-center">
+                <h1>{{place.name}}</h1>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12 text-center">
+                <h2>{{place.state}}</h2>
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-xs-12 text-center">
+                <span class="weather-today">{{place.current | number:0}}</span><span class="symbol">°</span>
+              </div>
+              <div class="col-xs-12 text-center">
+                <span class="weather-minmax">{{place.min | number:1}}°/{{place.max | number:1}}°</span>
+              </div>
+            </div>
+          </div>
+          <div id="forecast" class="container-fluid">
+    				<div class="row">
+              <div class="col-xs-1">
+              </div>
+              <div class="col-xs-2" ng-repeat="day in place.forecast" ng-hide="$index == 0">
+                <span>{{day.dt * 1000 | amDateFormat: 'dddd' | limitTo: 3}}</span>
+    						<i class="wi wi-night-sleet"></i>
+    						<span>{{day.temp.min | number:0}}°/{{day.temp.max | number:0}}°</span>
+    					</div>
+    				</div>
+    			</div>
+      </uib-slide>
+    </uib-carousel>
+</div>
+</body>
+<script type="text/javascript" src="lib/angular/angular.min.js"></script>
+<script type="text/javascript" src="lib/angularjs-geolocation/dist/angularjs-geolocation.min.js"></script>
+<script type="text/javascript" src="lib/angular-touch/angular-touch.min.js"></script>
+<script type="text/javascript" src="lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script type="text/javascript" src="lib/moment/moment.js"></script>
+<script type="text/javascript" src="lib/angular-moment/angular-moment.js"></script>
+<script type="text/javascript" src="js/app.js"></script>
 </html>

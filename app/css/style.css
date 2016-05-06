@@ -1,0 +1,132 @@
+/*@import 'reset';*/
+/*Paleta de Colores*/
+html, body {
+  height: 100%; }
+
+body {
+  font: 100% "Montserrat", sans-serif;
+  color: #333; }
+
+body h1 {
+  font-size: 26px;
+  margin: 0px; }
+
+body,
+body h2 {
+  font-size: 18px;
+  margin-top: 10px; }
+
+body,
+body h3 {
+  font-size: 12px;
+  margin: 0px; }
+
+header {
+  top: 0px; }
+
+footer {
+  bottom: 0px; }
+
+header, footer {
+  position: fixed;
+  height: 80px;
+  width: 100%;
+  padding-top: 30px;
+  padding-right: 15px;
+  padding-left: 15px;
+  z-index: 10; }
+
+header i.fa-bars, header i.fa-location-arrow {
+  font-size: 2.5em; }
+
+header i:hover {
+  color: white; }
+
+#background {
+  position: relative;
+  height: 100%;
+  overflow: hidden; }
+
+#background .blur {
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url(../img/ba.jpg);
+  opacity: 0.5;
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+  position: absolute;
+  top: -5%;
+  left: -5%;
+  width: 110%;
+  height: 110%; }
+
+#background .carousel, #background .carousel-inner, #background .item {
+  height: 100%; }
+
+#background ol.carousel-indicators {
+  z-index: 1; }
+
+#background ol.carousel-indicators li {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin: 2px;
+  border: 1px solid #231F20;
+  z-index: 1; }
+
+#background ol.carousel-indicators li.active {
+  background-color: #231F20; }
+
+#background a.carousel-control {
+  display: none; }
+
+#background .weather {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  padding-top: 20%; }
+
+#background .weather span.weather-today {
+  font-size: 15em;
+  text-align: center; }
+
+#background .weather span.symbol {
+  font-size: 5em;
+  text-align: center;
+  vertical-align: top; }
+
+#background .weather span.weather-minmax {
+  font-size: 2em; }
+
+#forecast {
+  text-align: center;
+  font-size: 1em;
+  text-transform: uppercase;
+  position: absolute;
+  bottom: 15%; }
+
+#forecast i {
+  font-size: 2.5em;
+  margin-top: 15px;
+  margin-bottom: 15px; }
+
+#forecast span:first-child {
+  font-weight: bold;
+  font-size: 1.5em; }
+
+#forecast span:last-child {
+  font-size: 1em; }
+
+#menu {
+  position: absolute;
+  z-index: 1;
+  background-color: #fff;
+  height: 100%;
+  width: 100%;
+  z-index: 2; }

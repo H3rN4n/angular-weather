@@ -1,0 +1,159 @@
+/*@import 'reset';*/
+
+$font-stack: 'Montserrat', sans-serif;
+$primary-color: #333;
+$font-big: 26px;
+$font-medium: 18px;
+$font-normal: 12px;
+$font-small: 12px;
+/*Paleta de Colores*/
+$primary-dark: #231F20;
+$primary-light: #F1F2F2;
+
+html, body {
+	height: 100%;
+}
+body {
+	font: 100% $font-stack;
+	color: $primary-color;
+}
+
+body {
+	h1 {
+		font-size: $font-big;
+		margin: 0px;
+	},
+	h2 {
+		font-size: $font-medium;
+		margin-top: 10px;
+	},
+	h3 {
+		font-size: $font-normal;
+		margin: 0px;
+	}
+}
+
+header {
+	top: 0px
+}
+footer {
+	bottom: 0px;
+}
+
+header, footer {
+	position: fixed;
+	height: 80px;
+	width: 100%;
+	padding-top: 30px;
+	padding-right: 15px;
+	padding-left: 15px;
+	z-index: 10;
+}
+
+header {
+	i.fa-bars, i.fa-location-arrow {
+		font-size: 2.5em;
+	}
+	i:hover {
+		color:white;
+	}
+}
+#background {
+	position: relative;
+	height: 75%;
+	overflow: hidden;
+}
+#background .blur {
+	background-position: center center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-image: url(../img/ba.jpg);
+
+	opacity: 0.5;
+    -webkit-filter: blur(5px);
+	-moz-filter: blur(5px);
+	-o-filter: blur(5px);
+	-ms-filter: blur(5px);
+	filter: blur(5px);
+
+	position: absolute;
+    top: -5%;
+    left: -5%;
+    width: 110%;
+    height: 110%;
+}
+#background {
+	.carousel, .carousel-inner, .item {
+		height: 100%;
+	}
+	ol.carousel-indicators {
+		z-index: 1;
+	}
+	ol.carousel-indicators {
+		li {
+			width: 10px;
+			height: 10px;
+			border-radius: 50%;
+			margin: 2px;
+			border: 1px solid $primary-dark;
+			z-index: 1;
+		}
+		li.active {
+			background-color: $primary-dark
+		}
+	}
+	a.carousel-control {
+		display: none;
+	}
+}
+#background .weather {
+	position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+	height: 100%;
+	padding-top: 20%;
+}
+#background .weather {
+	span.weather-today {
+		font-size: 15em;
+		text-align: center;
+	}
+	span.symbol {
+		font-size: 5em;
+		text-align: center;
+		vertical-align: top;
+	}
+	span.weather-minmax {
+		font-size: 2em;
+	}
+}
+#forecast {
+	text-align: center;
+	font-size: 1em;
+	text-transform: uppercase;
+	padding-top: 7%;
+    height: 25%;
+}
+#forecast {
+	i {
+		font-size: 2.5em;
+		margin-top: 15px;
+		margin-bottom: 15px;
+	}
+	span:first-child {
+		font-weight: bold;
+		font-size: 1.5em
+	}
+	span:last-child {
+		font-size: 1em
+	}
+}
+#menu {
+	position: absolute;
+	z-index: 1;
+	background-color: #fff;
+	height: 100%;
+	width: 100%;
+	z-index: 2
+}

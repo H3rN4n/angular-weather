@@ -1,7 +1,7 @@
 (function(){
 
  'use strict'
-  var weatherModule = angular.module('weatherModule', ['geolocation', 'angularMoment'])
+  var weatherModule = angular.module('weatherModule', ['geolocation', 'angularMoment', 'ui.bootstrap', 'ngTouch'])
 
   weatherModule.factory('openWeatherService', function($http){
     var apiKey = 'af95bc4e30710dff7080cfb67eadba30'
@@ -34,6 +34,7 @@
 
   weatherModule.factory('placesFactory', function(openWeatherService){
     var places = []
+    var index = 1;
 
     var isDuplicate = function(placeName){
       var result = places.filter(function(obj){
@@ -63,7 +64,8 @@
             .then(function(response){
               var forecast = response
               places.unshift({
-                "name": forecast.data.city.name + " (Current location)",
+                "id": 0,
+                "name": forecast.data.city.name,
                 "coords": forecast.data.city.coord,
                 "state": forecast.data.list[1]['weather'][0]['description'],
                 "min": forecast.data.list[1]['temp']['min'],
@@ -84,6 +86,7 @@
               .then(function(response){
                 var currentWeather = response
                 places.push({
+                  "id": index,
                   "name": forecast.data.city.name,
                   "coords": forecast.data.city.coord,
                   "state": forecast.data.list[0]['weather'][0]['description'],
@@ -92,6 +95,7 @@
                   'current': currentWeather.data.main.temp,
                   'forecast': forecast.data.list
                 })
+                index++
               })
              return places
            })
@@ -106,18 +110,36 @@
     }
   })
 
+  weatherModule.controller('headerController', function($rootScope, $scope) {
+  	$rootScope.showMenu = {
+      'state': false,
+      'class': 'ng-hide'
+    };
+
+  	$scope.show = function() {
+  		if($rootScope.showMenu.state === true) {
+  			$rootScope.showMenu.class = 'animated slideOutUp';
+  		} else {
+  			$rootScope.showMenu.class = 'animated slideInDown';
+  		}
+  		$rootScope.showMenu.state = $rootScope.showMenu.state === false ? true: false;
+  	};
+  })
+
   weatherModule.controller('listController', function(placesFactory, geolocation){
     var list = this
     var initialPlaces = ['Buenos Aires','Mendoza','Lima','San Francisco']
 
-    geolocation.getLocation().then(function(data){
-      list.myCoords = {lat:data.coords.latitude, long:data.coords.longitude};
-      list.addPlace(null, list.myCoords);
-    });
+    list.initPlaces = function(){
+      geolocation.getLocation().then(function(data){
+        list.myCoords = {lat:data.coords.latitude, long:data.coords.longitude};
+        list.addPlace(null, list.myCoords);
+      });
 
-    for (var i = 0; i < initialPlaces.length; i++) {
-      placesFactory.addPlaceByName(initialPlaces[i])
-      list.places = placesFactory.getPlaces()
+      for (var i = 0; i < initialPlaces.length; i++) {
+        placesFactory.addPlaceByName(initialPlaces[i])
+        list.places = placesFactory.getPlaces()
+      }
     }
 
     list.addPlace = function(place, coords){
