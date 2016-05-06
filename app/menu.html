@@ -1,21 +1,6 @@
-<header ng-controller="headerController">
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-xs-4 text-left">
-				<i class="fa fa-plus fa-4x" aria-hidden="true" ng-click="show()"></i>
-			</div>
-			<div class="col-xs-4">
-
-			</div>
-			<div class="col-xs-4 text-right">
-
-			</div>
-		</div>
-	</div>
-</header>
 <section ng-controller="listController as list">
-	<ul>
-		<li></li>
+	<ul class="list-group">
+	  <li class="list-group-item" ng-repeat="place in list.places">{{place.name}}</li>
 	</ul>
 	<form class="form">
 	    <fieldset>
