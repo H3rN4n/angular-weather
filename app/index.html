@@ -28,7 +28,9 @@
       </div>
     </div>
   </header>
-  <aside id="menu" class="{{$root.showMenu.class}}" ng-include="'menu.html'">
+
+  <aside id="menu" class="{{$root.showMenu.class}}">
+    <weather-menu></weather-menu>
   </aside>
   <section id="background" ng-controller="listController as list" ng-init="list.initPlaces()">
     <uib-carousel active="active">

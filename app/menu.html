@@ -1,15 +1,24 @@
-<section ng-controller="listController as list">
-	<ul class="list-group">
-	  <li class="list-group-item" ng-repeat="place in list.places">{{place.name}}</li>
-	</ul>
-	<form class="form">
-	    <fieldset>
+<aside id="menu" ng-controller="menuController as menu" style="margin-top: 80px;" class="row">
+	<div class="col-xs-12">
+		<ul class="list-group">
+	    <li class="list-group-item" ng-repeat="place in menu.places">
 	      <div class="input-group">
-	        <input type="text" ng-model="list.newPlace" name="name" value="" class="form-control" placeholder="Add a Name">
+	        {{place.name}}
 	        <div class="input-group-btn">
-	          <button type="button" name="button" class="btn btn-error btn-success" ng-click="list.addPlace(list.newPlace)">Add Name</button>
+	          <button class="btn btn-danger btn-small" type="button" name="button" ng-click="menu.removePlace(place.name)">x</button>
 	        </div>
 	      </div>
-	    </fieldset>
-	</form>
-</section>
+	    </li>
+	  </ul>
+		<form class="form">
+		    <fieldset>
+		      <div class="input-group">
+		        <input type="text" ng-model="menu.newPlace" name="name" value="" class="form-control" placeholder="Add a Name">
+		        <div class="input-group-btn">
+		          <button type="button" name="button" class="btn btn-error btn-success" ng-click="menu.addPlace(menu.newPlace)">Add Name</button>
+		        </div>
+		      </div>
+		    </fieldset>
+		</form>
+	</div>
+</aside>

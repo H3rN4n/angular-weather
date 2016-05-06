@@ -126,6 +126,38 @@
   	};
   })
 
+  weatherModule.directive('weatherMenu', function(){
+    return {
+      restrict: 'E',
+      templateUrl: './menu.html'
+    }
+  })
+
+  weatherModule.controller('menuController', function($rootScope, $scope, placesFactory) {
+    var menu = this
+    menu.places = placesFactory.getPlaces()
+
+    menu.addPlace = function(place, coords){
+      if(!coords){
+        placesFactory.addPlaceByName(place).then(function(response) {
+          list.places = placesFactory.getPlaces()
+        })
+        menu.newPlace = ""
+      }
+
+      if(coords){
+        placesFactory.addPlaceByCoords(coords).then(function(response) {
+          menu.places = placesFactory.getPlaces()
+        })
+      }
+    }
+
+    menu.removePlace = function(place){
+      menu.places = placesFactory.removePlace(place)
+    }
+
+  })
+
   weatherModule.controller('listController', function(placesFactory, geolocation){
     var list = this
     var initialPlaces = ['Buenos Aires','Mendoza','Lima','San Francisco']
@@ -140,26 +172,22 @@
         placesFactory.addPlaceByName(initialPlaces[i])
         list.places = placesFactory.getPlaces()
       }
-    }
 
-    list.addPlace = function(place, coords){
-      if(!coords){
-        placesFactory.addPlaceByName(place).then(function(response) {
-          list.places = placesFactory.getPlaces()
-        })
-        list.newPlace = ""
+      list.addPlace = function(place, coords){
+        if(!coords){
+          placesFactory.addPlaceByName(place).then(function(response) {
+            list.places = placesFactory.getPlaces()
+          })
+          menu.newPlace = ""
+        }
+
+        if(coords){
+          placesFactory.addPlaceByCoords(coords).then(function(response) {
+            menu.places = placesFactory.getPlaces()
+          })
+        }
       }
-
-      if(coords){
-        placesFactory.addPlaceByCoords(coords).then(function(response) {
-          list.places = placesFactory.getPlaces()
-        })
-      }
-
     }
 
-    list.removePlace = function(place){
-      list.places = placesFactory.removePlace(place)
-    }
   })
 })()
