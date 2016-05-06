@@ -60,7 +60,7 @@ header {
 }
 #background {
 	position: relative;
-	height: 75%;
+	height: 100%;
 	overflow: hidden;
 }
 #background .blur {
@@ -132,8 +132,8 @@ header {
 	text-align: center;
 	font-size: 1em;
 	text-transform: uppercase;
-	padding-top: 7%;
-    height: 25%;
+	position: absolute;
+	bottom: 15%
 }
 #forecast {
 	i {
