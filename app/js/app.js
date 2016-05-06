@@ -1,8 +1,8 @@
 (function(){
 
  'use strict'
-  var weatherModule = angular.module('weatherModule', [])
-  
+  var weatherModule = angular.module('weatherModule', ['geolocation', 'angularMoment'])
+
   weatherModule.factory('openWeatherService', function($http){
     var apiKey = 'af95bc4e30710dff7080cfb67eadba30'
     var apiUrl = 'http://api.openweathermap.org/data/2.5/'
@@ -22,11 +22,11 @@
             params: {'q': cityName, 'appid': apiKey, 'units': units || 'metric', 'cnt': 6}
          });
     	},
-      getWeatherByCoords: function(coords){
+      getWeatherByCoords: function(coords, units){
     		return $http({
             url: apiUrl,
             method: "GET",
-            params: {'lat': coords.lat, 'long': coords.long, 'appid': apiKey}
+            params: {'lat': coords.lat, 'long': coords.long, 'appid': apiKey, 'units': units || 'metric'}
          });
     	}
     }
@@ -86,9 +86,13 @@
     }
   })
 
-  weatherModule.controller('listController', function(placesFactory){
+  weatherModule.controller('listController', function(placesFactory, geolocation){
     var list = this
     var initialPlaces = ['Buenos Aires','Mendoza','Lima','San Francisco']
+
+    geolocation.getLocation().then(function(data){
+      list.myCoords = {lat:data.coords.latitude, long:data.coords.longitude};
+    });
 
     for (var i = 0; i < initialPlaces.length; i++) {
       placesFactory.addPlace(initialPlaces[i])

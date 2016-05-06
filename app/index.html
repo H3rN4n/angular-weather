@@ -14,10 +14,14 @@
       </div>
       <div class="well">
         <div ng-controller="listController as list">
+          {{list.myCoords}}
           <ul class="list-group">
             <li class="list-group-item" ng-repeat="place in list.places">
               <div class="input-group">
                 {{place.name}} - {{place.state}} - {{place.current | number:1}} - {{place.min | number:1}} - {{place.max | number:1}}
+                <ul>
+                  <li ng-repeat="day in place.forecast" ng-hide="$index == 0">{{day.dt * 1000 | amDateFormat: 'dddd' | limitTo: 3}} - {{day.temp.min}} - {{day.temp.max}}</li>
+                </ul>
                 <div class="input-group-btn">
                   <button class="btn btn-danger btn-small" type="button" name="button" ng-click="list.removePlace(place.name)">x</button>
                 </div>
@@ -39,5 +43,8 @@
     </div>
   </body>
   <script type="text/javascript" src="lib/angular/angular.min.js"></script>
+  <script type="text/javascript" src="lib/angularjs-geolocation/dist/angularjs-geolocation.min.js"></script>
+  <script type="text/javascript" src="lib/moment/moment.js"></script>
+  <script type="text/javascript" src="lib/angular-moment/angular-moment.js"></script>
   <script type="text/javascript" src="js/app.js"></script>
 </html>
