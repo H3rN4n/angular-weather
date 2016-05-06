@@ -24,9 +24,9 @@
     	},
       getWeatherByCoords: function(coords, units){
     		return $http({
-            url: apiUrl,
+            url: apiUrl + "find",
             method: "GET",
-            params: {'lat': coords.lat, 'long': coords.long, 'appid': apiKey, 'units': units || 'metric'}
+            params: {'lat': coords.lat, 'lon': coords.long, 'appid': apiKey, 'units': units || 'metric', 'cnt': 2}
          });
     	}
     }
@@ -55,7 +55,27 @@
         })
         return this.getPlaces()
       },
-      addPlace: function(placeName){
+      addPlaceByCoords: function(coords){
+        return openWeatherService.getWeatherByCoords(coords)
+         .then(function(response){
+           var currentWeather = response
+           return openWeatherService.getForecastWeatherByCityName(currentWeather.data.list[1]['name'])
+            .then(function(response){
+              var forecast = response
+              places.unshift({
+                "name": forecast.data.city.name + " (Current location)",
+                "coords": forecast.data.city.coord,
+                "state": forecast.data.list[1]['weather'][0]['description'],
+                "min": forecast.data.list[1]['temp']['min'],
+                "max": forecast.data.list[1]['temp']['max'],
+                'current': currentWeather.data.list[1]['main']['temp'],
+                'forecast': forecast.data.list
+              })
+            })
+           return places
+      })
+      },
+      addPlaceByName: function(placeName){
         if (placeName &&!isDuplicate(placeName)) {
           return openWeatherService.getForecastWeatherByCityName(placeName)
            .then(function(response){
@@ -73,7 +93,7 @@
                   'forecast': forecast.data.list
                 })
               })
-             return places;
+             return places
            })
         }else if(!placeName){
           alert("Please insert a place")
@@ -92,18 +112,28 @@
 
     geolocation.getLocation().then(function(data){
       list.myCoords = {lat:data.coords.latitude, long:data.coords.longitude};
+      list.addPlace(null, list.myCoords);
     });
 
     for (var i = 0; i < initialPlaces.length; i++) {
-      placesFactory.addPlace(initialPlaces[i])
+      placesFactory.addPlaceByName(initialPlaces[i])
       list.places = placesFactory.getPlaces()
     }
 
-    list.addPlace = function(place){
-      placesFactory.addPlace(place).then(function(response) {
-        list.places = placesFactory.getPlaces()
-      })
-      list.newPlace = ""
+    list.addPlace = function(place, coords){
+      if(!coords){
+        placesFactory.addPlaceByName(place).then(function(response) {
+          list.places = placesFactory.getPlaces()
+        })
+        list.newPlace = ""
+      }
+
+      if(coords){
+        placesFactory.addPlaceByCoords(coords).then(function(response) {
+          list.places = placesFactory.getPlaces()
+        })
+      }
+
     }
 
     list.removePlace = function(place){
