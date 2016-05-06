@@ -17,7 +17,7 @@
           <ul class="list-group">
             <li class="list-group-item" ng-repeat="place in list.places">
               <div class="input-group">
-                {{place.name}} - {{place.state}} - {{place.current | kelvinToCelsius | number:1}} - {{place.min | kelvinToCelsius| number:1}} - {{place.max | kelvinToCelsius| number:1}}
+                {{place.name}} - {{place.state}} - {{place.current | number:1}} - {{place.min | number:1}} - {{place.max | number:1}}
                 <div class="input-group-btn">
                   <button class="btn btn-danger btn-small" type="button" name="button" ng-click="list.removePlace(place.name)">x</button>
                 </div>
