@@ -2,30 +2,24 @@
 
  'use strict'
   var weatherModule = angular.module('weatherModule', [])
-
-  weatherModule.filter('kelvinToCelsius', function() {
-    return function(input) {
-      return input -273.15;
-    };
-  });
-
+  
   weatherModule.factory('openWeatherService', function($http){
     var apiKey = 'af95bc4e30710dff7080cfb67eadba30'
     var apiUrl = 'http://api.openweathermap.org/data/2.5/'
 
     return {
-    	getCurrentWeatherByCityName: function(cityName){
+    	getCurrentWeatherByCityName: function(cityName, units){
     		return $http({
             url: apiUrl + "weather",
             method: "GET",
-            params: {'q': cityName, 'appid': apiKey, 'units': 'metric'}
+            params: {'q': cityName, 'appid': apiKey, 'units': units || 'metric'}
          });
     	},
-      getForecastWeatherByCityName: function(cityName){
+      getForecastWeatherByCityName: function(cityName, units){
     		return $http({
             url: apiUrl + 'forecast/daily',
             method: "GET",
-            params: {'q': cityName, 'appid': apiKey, 'units': 'metric', 'cnt': 6}
+            params: {'q': cityName, 'appid': apiKey, 'units': units || 'metric', 'cnt': 6}
          });
     	},
       getWeatherByCoords: function(coords){
