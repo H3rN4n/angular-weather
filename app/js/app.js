@@ -128,38 +128,7 @@
           alert("You can't add a duplicate place")
           return places
         }
-      },
-
-    //   addPlaceByName: function(placeName){
-    //     if (placeName &&!isDuplicate(placeName)) {
-    //       return openWeatherService.getForecastWeatherByCityName(placeName)
-    //        .then(function(response){
-    //          var forecast = response
-    //          return openWeatherService.getCurrentWeatherByCityName(placeName)
-    //           .then(function(response){
-    //             var currentWeather = response
-    //             places.push({
-    //               "id": index,
-    //               "name": forecast.data.city.name,
-    //               "coords": forecast.data.city.coord,
-    //               "state": forecast.data.list[0]['weather'][0]['description'],
-    //               "min": forecast.data.list[0]['temp']['min'],
-    //               "max": forecast.data.list[0]['temp']['max'],
-    //               'current': currentWeather.data.main.temp,
-    //               'forecast': forecast.data.list
-    //             })
-    //             index++
-    //           })
-    //          return places
-    //        })
-    //     }else if(!placeName){
-    //       alert("Please insert a place")
-    //       return places
-    //     }else{
-    //       alert("You can't add a duplicate place")
-    //       return places
-    //     }
-    //   }
+      }
      }
   })
 
