@@ -34,7 +34,7 @@
   </aside>
   <section id="background" ng-controller="listController as list" ng-init="list.initPlaces()">
     <uib-carousel active="active">
-      <uib-slide ng-repeat="place in list.places" index="$index">
+      <uib-slide ng-repeat="place in list.places" index="place.id">
         <div class="blur" style="background-image: url('/img/ba.jpg')"></div>
         <div class="weather">
           <div class="container">

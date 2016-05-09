@@ -1,5 +1,4 @@
 (function(){
-
  'use strict'
   var weatherModule = angular.module('weatherModule', ['geolocation', 'angularMoment', 'ui.bootstrap', 'ngTouch','ngAnimate'])
 
@@ -135,6 +134,8 @@
 
   weatherModule.controller('menuController', function($rootScope, $scope, placesFactory) {
     var menu = this
+    var list = $rootScope.list;
+
     menu.places = placesFactory.getPlaces()
 
     menu.addPlace = function(place, coords){
@@ -158,9 +159,10 @@
 
   })
 
-  weatherModule.controller('listController', function(placesFactory, geolocation){
+  weatherModule.controller('listController', function($rootScope, placesFactory, geolocation){
     var list = this
-    var initialPlaces = ['Buenos Aires','Mendoza','Lima','San Francisco']
+    $rootScope.list = list;
+    var initialPlaces = ['Mendoza','Lima','San Francisco']
 
     list.initPlaces = function(){
       geolocation.getLocation().then(function(data){
@@ -183,7 +185,7 @@
 
         if(coords){
           placesFactory.addPlaceByCoords(coords).then(function(response) {
-            menu.places = placesFactory.getPlaces()
+            menu.places = placesFactory.getPlaces();
           })
         }
       }
