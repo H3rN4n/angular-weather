@@ -2,6 +2,24 @@
  'use strict'
   var weatherModule = angular.module('weatherModule', ['geolocation', 'angularMoment', 'ui.bootstrap', 'ngTouch','ngAnimate'])
 
+  weatherModule.factory('flikrService', function(){
+      var apiUrl = "https://api.flickr.com/services/rest/"
+      var apiKey = "7727dfc8d38ca43ff2d91ddc3d1e37f7"
+      return {
+        getPlaceImages: function(placeName){
+          return $http({
+              url: apiUrl,
+              method: "GET",
+              params: {'method': 'flickr.places.find',
+                       'appid': apiKey,
+                       'query': placeName,
+                       'format': 'json'
+              }
+           });
+        }
+      }
+  })
+
   weatherModule.factory('openWeatherService', function($http){
     var apiKey = 'af95bc4e30710dff7080cfb67eadba30'
     var apiUrl = 'http://api.openweathermap.org/data/2.5/'
@@ -55,6 +73,7 @@
         })
         return this.getPlaces()
       },
+
       addPlaceByCoords: function(coords){
         return openWeatherService.getWeatherByCoords(coords)
          .then(function(response){
@@ -74,8 +93,9 @@
               })
             })
            return places
-      })
+         })
       },
+
       addPlaceByName: function(placeName){
         if (placeName &&!isDuplicate(placeName)) {
           return openWeatherService.getForecastWeatherByCityName(placeName)
@@ -170,30 +190,34 @@
     list.active = 0
     var initialPlaces = ['Mendoza','Lima','San Francisco']
 
-    $rootScope.$on('updatePlaces', function(event, data) { list.places = data })
+    $rootScope.$on('updatePlaces', function(event, data) { reloadPlaces() })
+
+    var reloadPlaces = function(){
+      list.places = placesFactory.getPlaces()
+    }
 
     list.initPlaces = function(){
       geolocation.getLocation().then(function(data){
-        list.myCoords = {lat:data.coords.latitude, long:data.coords.longitude};
-        list.addPlace(null, list.myCoords);
+        list.myCoords = {lat:data.coords.latitude, long:data.coords.longitude}
+        list.addPlace(null, list.myCoords)
       });
 
       for (var i = 0; i < initialPlaces.length; i++) {
         placesFactory.addPlaceByName(initialPlaces[i])
-        list.places = placesFactory.getPlaces()
+        reloadPlaces()
       }
 
       list.addPlace = function(place, coords){
         if(!coords){
           placesFactory.addPlaceByName(place).then(function(response) {
-            list.places = placesFactory.getPlaces()
+            reloadPlaces()
           })
           menu.newPlace = ""
         }
 
         if(coords){
           placesFactory.addPlaceByCoords(coords).then(function(response) {
-            menu.places = placesFactory.getPlaces();
+            reloadPlaces()
           })
         }
       }
