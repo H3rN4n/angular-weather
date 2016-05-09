@@ -40,7 +40,10 @@ header i.fa-bars, header i.fa-location-arrow {
   font-size: 2.5em; }
 
 header i:hover {
-  color: white; }
+  color: black; }
+
+header i:focus, header i:active {
+  color: black; }
 
 #background {
   position: relative;
@@ -130,3 +133,8 @@ header i:hover {
   height: 100%;
   width: 100%;
   z-index: 2; }
+
+.menu {
+  margin-top: 80px; }
+  .menu .form {
+    margin-top: 1em; }

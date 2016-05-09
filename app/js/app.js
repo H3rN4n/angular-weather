@@ -132,37 +132,45 @@
     }
   })
 
-  weatherModule.controller('menuController', function($rootScope, $scope, placesFactory) {
+  weatherModule.controller('menuController', function($rootScope, placesFactory) {
     var menu = this
-    var list = $rootScope.list;
 
     menu.places = placesFactory.getPlaces()
+
+    var updatePlaces = function(){
+      menu.places = placesFactory.getPlaces()
+    }
 
     menu.addPlace = function(place, coords){
       if(!coords){
         placesFactory.addPlaceByName(place).then(function(response) {
-          list.places = placesFactory.getPlaces()
+          menu.places = placesFactory.getPlaces()
         })
         menu.newPlace = ""
+        $rootScope.$broadcast( "updatePlaces", menu.places );
       }
 
       if(coords){
         placesFactory.addPlaceByCoords(coords).then(function(response) {
           menu.places = placesFactory.getPlaces()
         })
+        $rootScope.$broadcast( "updatePlaces", menu.places );
       }
     }
 
     menu.removePlace = function(place){
       menu.places = placesFactory.removePlace(place)
+      $rootScope.$broadcast( "updatePlaces", menu.places );
     }
 
   })
 
   weatherModule.controller('listController', function($rootScope, placesFactory, geolocation){
     var list = this
-    $rootScope.list = list;
+    list.active = 0
     var initialPlaces = ['Mendoza','Lima','San Francisco']
+
+    $rootScope.$on('updatePlaces', function(event, data) { list.places = data })
 
     list.initPlaces = function(){
       geolocation.getLocation().then(function(data){

@@ -7,9 +7,7 @@ var reload = browserSync.reload;
 
 // watch files for changes and reload
 
-gulp.task('default',['sass', 'serve'] ,function() {
-  console.log('DONE');
-});
+gulp.task('default',['sass', 'sass:watch', 'serve']);
 
 gulp.task('serve', function() {
   browserSync({
@@ -18,15 +16,15 @@ gulp.task('serve', function() {
     }
   });
 
-  gulp.watch(['*.html', 'styles/**/*.css', 'scripts/**/*.js'], {cwd: 'app'}, reload);
+  gulp.watch(['*.html', './app/css/*.css', './app/js/*.js'], {cwd: 'app'}, reload);
 });
 
 gulp.task('sass', function () {
-  return gulp.src('./sass/**/*.scss')
+  return gulp.src('./sass/style.scss')
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest('./app/css'));
 });
 
 gulp.task('sass:watch', function () {
-  gulp.watch('./sass/**/*.scss', ['sass']);
+  gulp.watch('./sass/style.scss', ['sass']);
 });
