@@ -72,7 +72,7 @@
       return result
     }
 
-
+    /*BY COORDS*/
     var getWeatherByCoords = function(coords) {
       return openWeatherService.getWeatherByCoords(coords).then(function(response){
         return {'coords': coords, 'current': response}
@@ -87,7 +87,6 @@
     },
 
     parseDataByCoords = function(obj){ //{coords, current, forecast}
-      console.log(obj)
 
       var deferred = $q.defer();
 
@@ -102,15 +101,55 @@
             'current': obj.current['data']['list'][1]['main']['temp'],
             'forecast': obj.forecast['data']['list']
           })
-          console.log(obj, places);
           deferred.resolve(places);
         } else {
-          console.log('error');
           deferred.reject('Something was wrong');
         }
 
       return deferred.promise;
     }
+
+    /*END BY COORDS*/
+
+    /*BY NAME*/
+    var getWeatherByName = function(cityName) {
+      return openWeatherService.getCurrentWeatherByCityName(cityName).then(function(response){
+        return {'cityName': cityName, 'current': response}
+      });
+    },
+
+    getForecastWeatherByName = function(obj) { //{cityName, current}
+      return openWeatherService.getForecastWeatherByCityName(obj.cityName).then(function(response){
+        obj.forecast = response
+        return obj
+      });
+    },
+
+    parseDataByName = function(obj){ //{cityName, current, forecast}
+  
+      var deferred = $q.defer();
+
+        if (obj.current.data.cod == 200 && obj.forecast.data.cod == 200){
+          places.push({
+            "id": index,
+            "name": obj.current.data.name,
+            "coords": obj.current.data.coord,
+            "state": obj.forecast.data.list[0]['weather'][0]['description'],
+            "min": obj.forecast.data.list[0]['temp']['min'],
+            "max": obj.forecast.data.list[0]['temp']['max'],
+            'current': obj.current.data.main.temp,
+            'forecast': obj.forecast.data.list
+          })
+          index++
+          deferred.resolve(places);
+        } else {
+          deferred.reject('Something was wrong');
+        }
+
+      return deferred.promise;
+    }
+
+    /*END BY NAME*/
 
     return {
       getPlaces: function(){return places},
@@ -123,6 +162,10 @@
 
       addPlaceByCoords: function(coords){
         return getWeatherByCoords( coords ).then( getForecastWeatherByCoords ).then( parseDataByCoords );
+      },
+
+      addPlaceByName: function(cityName){
+        return getWeatherByName( cityName ).then( getForecastWeatherByName ).then( parseDataByName );
       }
 
       // addPlaceByCoords: function(coords){
@@ -252,8 +295,8 @@
       });
 
       for (var i = 0; i < initialPlaces.length; i++) {
-        //placesFactory.addPlaceByName(initialPlaces[i])
-        //reloadPlaces()
+        placesFactory.addPlaceByName(initialPlaces[i])
+        reloadPlaces()
       }
 
       list.addPlace = function(place, coords){
@@ -267,7 +310,6 @@
 
         if(coords){
           placesFactory.addPlaceByCoords(coords).then(function(response) {
-            console.log(response)
             reloadPlaces()
           })
         }
