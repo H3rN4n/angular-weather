@@ -23,9 +23,24 @@ angular.module('weatherModule').controller('headerController',
 
 'use strict'
  angular.module('weatherModule').controller('listController',['$rootScope', 'placesFactory', 'geolocation', function($rootScope, placesFactory, geolocation){
-    var list = this
-    list.active = 0
-    var initialPlaces = ['Mendoza','Lima','San Francisco']
+    var list = this;
+
+    list.active = 0;
+    list.initialPlaces = ['Mendoza','Lima','San Francisco'];
+
+    function addPlace(place, coords){
+
+        if(!coords){
+          placesFactory.addPlaceByName(place).then(function(response) {
+            reloadPlaces()
+          })
+          menu.newPlace = ""
+        } else {
+          placesFactory.addPlaceByCoords(coords).then(function(response) {
+            reloadPlaces()
+          })
+        }
+      }
 
     $rootScope.$on('updatePlaces', function(event, data) { 
       reloadPlaces();
@@ -42,28 +57,14 @@ angular.module('weatherModule').controller('headerController',
     list.initPlaces = function(){
       geolocation.getLocation().then(function(data){
         list.myCoords = {lat:data.coords.latitude, long:data.coords.longitude}
-        list.addPlace(null, list.myCoords)
+        addPlace(null, list.myCoords)
       });
 
-      for (var i = 0; i < initialPlaces.length; i++) {
-        placesFactory.addPlaceByName(initialPlaces[i])
+      for (var i = 0; i < list.initialPlaces.length; i++) {
+        placesFactory.addPlaceByName(list.initialPlaces[i])
       }
 
       reloadPlaces()
-
-      list.addPlace = function(place, coords){
-
-        if(!coords){
-          placesFactory.addPlaceByName(place).then(function(response) {
-            reloadPlaces()
-          })
-          menu.newPlace = ""
-        } else {
-          placesFactory.addPlaceByCoords(coords).then(function(response) {
-            reloadPlaces()
-          })
-        }
-      }
     }
 
   }])

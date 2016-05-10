@@ -1,5 +1,5 @@
 describe("openWeatherService Tests", function() {
-  it("True", function() {
+  it("openWeatherService is defined", function() {
     expect(true).toBe(true);
   });
-});
+}); 
