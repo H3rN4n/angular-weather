@@ -69,8 +69,7 @@ angular.module('weatherModule').factory('placesFactory',['$q', 'openWeatherServi
     },
 
     parseDataByName = function(obj){ //{cityName, current, forecast}
-    console.log(obj);
-  
+      
       var deferred = $q.defer();
 
         if (obj.current.data.cod == 200 && obj.forecast.data.cod == 200){
