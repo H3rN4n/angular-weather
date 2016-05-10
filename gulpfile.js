@@ -21,7 +21,7 @@ gulp.task('serve', function() {
     }
   });
 
-  gulp.watch(['*.html', './app/dist/*.css', './app/dist/*.js'], {cwd: 'app'}, reload);
+  gulp.watch(['*.html', 'app/dist/*.css', 'app/dist/*.js'], {cwd: 'app'}, reload);
 });
 
 gulp.task('sass', function () {
@@ -61,5 +61,5 @@ gulp.task('minify-css', ['sass'], function() {
 
 
 gulp.task('sass:watch', function () {
-  gulp.watch('./sass/style.scss', ['sass']);
+  gulp.watch('./sass/style.scss', ['minify-css']);
 });

@@ -1,4 +1,4 @@
-/*@import 'reset';*/
+@import 'reset';
 
 $font-stack: 'Montserrat', sans-serif;
 $primary-color: #333;
@@ -159,12 +159,12 @@ header {
 	background-color: #fff;
 	height: 100%;
 	width: 100%;
-	z-index: 2
+	z-index: 2;
+	padding-top: 3em;
 }
 
 .menu {
-	margin-top: 80px;
-	
+
 	.form{
 		margin-top: 1em;
 	}

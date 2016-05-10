@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="dist/style.css" media="screen" title="no title" charset="utf-8">
 </head>
 <body>
+
   <header ng-controller="headerController">
     <div class="container-fluid">
       <div class="row">
@@ -32,6 +33,7 @@
   <aside id="menu" class="{{$root.showMenu.class}}">
     <weather-menu></weather-menu>
   </aside>
+
   <section id="background" ng-controller="listController as list" ng-init="list.initPlaces()">
     <uib-carousel active="list.active">
       <uib-slide ng-repeat="place in list.places" index="place.id">
@@ -55,7 +57,7 @@
                 <span class="weather-today">{{place.current | number:0}}</span><span class="symbol">°</span>
               </div>
               <div class="col-xs-12 text-center">
-                <span class="weather-minmax">{{place.min | number:1}}°/{{place.max | number:1}}°</span>
+                <span class="weather-minmax">{{place.min | number:1}}°/ {{place.max | number:1}}°</span>
               </div>
             </div>
           </div>

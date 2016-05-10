@@ -1,8 +1,9 @@
-<aside id="menu" ng-controller="menuController as menu" class="menu">
+<aside id="menu" ng-controller="menuController as menu" class="container">
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="container">
-				<h2>My Places:</h2>
+				<hr>
+				<h2>{{'Places:' | uppercase}}</h2>
 				<hr>
 				<ul class="list-group">
 					<li class="list-group-item" ng-repeat="place in menu.places">
@@ -14,8 +15,10 @@
 						</div>
 					</li>
 				</ul>
+				<hr>
 				<form class="form">
 					<fieldset>
+						<h3>New Place:</h3><br>
 						<div class="input-group">
 							<input type="text" ng-model="menu.newPlace" name="name" value="" class="form-control" placeholder="Add a new City">
 							<div class="input-group-btn">
