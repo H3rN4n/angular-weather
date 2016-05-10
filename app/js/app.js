@@ -58,7 +58,7 @@
 
   weatherModule.factory('placesFactory', function($q, openWeatherService){
     var places = []
-    var index = 1;
+    var index = 1
 
     var isDuplicate = function(placeName){
       var result = places.filter(function(obj){
@@ -72,6 +72,46 @@
       return result
     }
 
+
+    var getWeatherByCoords = function(coords) {
+      return openWeatherService.getWeatherByCoords(coords).then(function(response){
+        return {'coords': coords, 'current': response}
+      });
+    },
+
+    getForecastWeatherByCoords = function(obj) { //{coords, current}
+      return openWeatherService.getForecastWeatherByCoords(obj.coords).then(function(response){
+        obj.forecast = response
+        return obj
+      });
+    },
+
+    parseDataByCoords = function(obj){ //{coords, current, forecast}
+      console.log(obj)
+
+      var deferred = $q.defer();
+
+        if (obj.current.data.cod == 200 && obj.forecast.data.cod == 200){
+          places.unshift({
+            "id": 0,
+            "name": obj.forecast['data']['city']['name'],
+            "coords":  obj.coords,
+            "state": obj.forecast['data']['list'][1]['weather'][0]['description'],
+            "min": obj.forecast['data']['list'][1]['temp']['min'],
+            "max": obj.forecast['data']['list'][1]['temp']['max'],
+            'current': obj.current['data']['list'][1]['main']['temp'],
+            'forecast': obj.forecast['data']['list']
+          })
+          console.log(obj, places);
+          deferred.resolve(places);
+        } else {
+          console.log('error');
+          deferred.reject('Something was wrong');
+        }
+
+      return deferred.promise;
+    }
+
     return {
       getPlaces: function(){return places},
       removePlace: function(placeName){
@@ -82,53 +122,59 @@
       },
 
       addPlaceByCoords: function(coords){
-        return $q.all([
-                openWeatherService.getWeatherByCoords(coords),
-                openWeatherService.getForecastWeatherByCoords(coords)
-            ]).then(function(data) {
-                places.unshift({
-                  "id": 0,
-                  "name": data[1]['data']['city']['name'],
-                  "coords":  data[1]['data']['city']['coord'],
-                  "state": data[1]['data']['list'][1]['weather'][0]['description'],
-                  "min": data[1]['data']['list'][1]['temp']['min'],
-                  "max": data[1]['data']['list'][1]['temp']['max'],
-                  'current': data[0]['data']['list'][1]['main']['temp'],
-                  'forecast': data[1]['data']['list']
-                })
-            }, function(reason) {
-                console.log('error')
-            });
-      },
-
-      addPlaceByName: function(placeName){
-        if (placeName &&!isDuplicate(placeName)) {
-          return $q.all([
-                  openWeatherService.getCurrentWeatherByCityName(placeName),
-                  openWeatherService.getForecastWeatherByCityName(placeName)
-              ]).then(function(data) {
-                  places.push({
-                    "id": index,
-                    "name": data[0]['data']['name'],
-                    "coords": data[0]['data']['coord'],
-                    "state": data[1]['data']['list'][0]['weather'][0]['description'],
-                    "min": data[1]['data']['list'][0]['temp']['min'],
-                    "max": data[1]['data']['list'][0]['temp']['max'],
-                    'current': data[0]['data']['main']['temp'],
-                    'forecast': data[1]['data']['list']
-                  })
-                  index++
-              }, function(reason) {
-                  console.log('error')
-              });
-        }else if(!placeName){
-          alert("Please insert a place")
-          return places
-        }else{
-          alert("You can't add a duplicate place")
-          return places
-        }
+        return getWeatherByCoords( coords ).then( getForecastWeatherByCoords ).then( parseDataByCoords );
       }
+
+      // addPlaceByCoords: function(coords){
+      //   return $q.all([
+      //           openWeatherService.getWeatherByCoords(coords),
+      //           openWeatherService.getForecastWeatherByCoords(coords)
+      //       ]).then(function(data) {
+      //           places.unshift({
+      //             "id": 0,
+      //             "name": data[1]['data']['city']['name'],
+      //             "coords":  data[1]['data']['city']['coord'],
+      //             "state": data[1]['data']['list'][1]['weather'][0]['description'],
+      //             "min": data[1]['data']['list'][1]['temp']['min'],
+      //             "max": data[1]['data']['list'][1]['temp']['max'],
+      //             'current': data[0]['data']['list'][1]['main']['temp'],
+      //             'forecast': data[1]['data']['list']
+      //           })
+      //       }, function(reason) {
+      //           console.log('error')
+      //       });
+      // },
+
+      // addPlaceByName: function(placeName){
+      //   if (placeName &&!isDuplicate(placeName)) {
+      //     return $q.all([
+      //             openWeatherService.getCurrentWeatherByCityName(placeName),
+      //             openWeatherService.getForecastWeatherByCityName(placeName)
+      //         ]).then(function(data) {
+      //             places.push({
+      //               "id": index,
+      //               "name": data[0]['data']['name'],
+      //               "coords": data[0]['data']['coord'],
+      //               "state": data[1]['data']['list'][0]['weather'][0]['description'],
+      //               "min": data[1]['data']['list'][0]['temp']['min'],
+      //               "max": data[1]['data']['list'][0]['temp']['max'],
+      //               'current': data[0]['data']['main']['temp'],
+      //               'forecast': data[1]['data']['list']
+      //             })
+      //             index++
+      //         }, function(reason) {
+      //             console.log('error')
+      //         });
+      //   }else if(!placeName){
+      //     alert("Please insert a place")
+      //     return places
+      //   }else{
+      //     alert("You can't add a duplicate place")
+      //     return places
+      //   }
+      // }
+
+
      }
   })
 
@@ -206,11 +252,12 @@
       });
 
       for (var i = 0; i < initialPlaces.length; i++) {
-        placesFactory.addPlaceByName(initialPlaces[i])
-        reloadPlaces()
+        //placesFactory.addPlaceByName(initialPlaces[i])
+        //reloadPlaces()
       }
 
       list.addPlace = function(place, coords){
+
         if(!coords){
           placesFactory.addPlaceByName(place).then(function(response) {
             reloadPlaces()
@@ -220,6 +267,7 @@
 
         if(coords){
           placesFactory.addPlaceByCoords(coords).then(function(response) {
+            console.log(response)
             reloadPlaces()
           })
         }
