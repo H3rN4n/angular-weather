@@ -2,8 +2,6 @@
 
 describe('weatherModule', function () {
     var $scope,
-    placesFactory,
-    geolocation,
     controller;
 
     beforeEach(module('weatherModule'));

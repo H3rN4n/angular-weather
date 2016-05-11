@@ -14,7 +14,7 @@
           menu.newPlace = ""
         } else {
           placesFactory.addPlaceByCoords(coords).then(function(response) {
-            reloadPlaces()
+            reloadPlaces({goTo: 0})
           })
         }
       }
@@ -23,25 +23,26 @@
       reloadPlaces();
     })
 
-    var reloadPlaces = function(){
+    var reloadPlaces = function(options){
       list.places = placesFactory.getPlaces();
-      if(list.places.length){
-        list.active = list.places[list.places.length - 1].id;  
+      if(list.places.length && !options){
+        list.active = list.places[list.places.length - 1].id;
+      } else {
+        list.active = options.goTo;
       }
       
     }
 
     list.initPlaces = function(){
+      for (var i = 0; i < list.initialPlaces.length; i++) {
+        placesFactory.addPlaceByName(list.initialPlaces[i])
+      }
+
       geolocation.getLocation().then(function(data){
         list.myCoords = {lat:data.coords.latitude, long:data.coords.longitude}
         addPlace(null, list.myCoords)
       });
 
-      for (var i = 0; i < list.initialPlaces.length; i++) {
-        placesFactory.addPlaceByName(list.initialPlaces[i])
-      }
-
-      reloadPlaces()
     }
 
   }])
