@@ -19,9 +19,30 @@ describe('weatherModule', function () {
     describe('listController', function () {
         
 
-        it('should have 3 initialPlaces', function () {
+        it('should have initialPlaces', function () {
             expect(controller.initialPlaces).toBeDefined();
         });
+
+        it('init process should be run add inital places', function () {
+            controller.initPlaces();
+            $scope.$apply();
+            console.log(controller.places);
+            expect(controller.places).toBeDefined();
+        });
+
+        /*it('should have one place geolocated ', function () {
+            //$rootScope.$apply();
+            //controller.initPlaces();
+            //expect(controller.places[1]).toBeDefined();
+        });
+
+        it('addPlace should have add a new element on list.places ', function () {
+            //expect(controller.initialPlaces).toBeDefined();
+        });
+
+        it('placeAdd should be change slide active position', function () {
+            //expect(controller.initialPlaces).toBeDefined();
+        });*/
 
         /*it('watches the name and updates the counter', function () {
             expect(scope.counter).toBe(0);

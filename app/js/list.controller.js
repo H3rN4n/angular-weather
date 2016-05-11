@@ -1,8 +1,9 @@
 'use strict'
- angular.module('weatherModule').controller('listController',['$rootScope', 'placesFactory', 'geolocation', function($rootScope, placesFactory, geolocation){
+ angular.module('weatherModule').controller('listController',['$rootScope', 'placesFactory', 'geolocation', '$q', function($rootScope, placesFactory, geolocation, $q){
     var list = this;
 
     list.active = 0;
+    list.places = [];
     list.initialPlaces = ['Mendoza','Lima','San Francisco'];
 
     function addPlace(place, coords){
@@ -33,6 +34,26 @@
       
     }
 
+    var initFromPlaceList = function(){
+      var deferred = $q.defer();
+
+      for (var i = 0; i < list.initialPlaces.length; i++) {
+        placesFactory.addPlaceByName(list.initialPlaces[i])
+
+        if(i == list.initialPlaces.length -1){
+          deferred.resolve(i);
+        } else {
+          deferred.notify('fetching data.');
+        }
+      }
+
+      return deferred.promise;
+    }
+
+    var initFromGeoLocation = function(){
+
+    }
+
     list.initPlaces = function(){
       for (var i = 0; i < list.initialPlaces.length; i++) {
         placesFactory.addPlaceByName(list.initialPlaces[i])
@@ -42,7 +63,6 @@
         list.myCoords = {lat:data.coords.latitude, long:data.coords.longitude}
         addPlace(null, list.myCoords)
       });
-
     }
 
   }])

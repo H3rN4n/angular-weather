@@ -22,10 +22,11 @@ angular.module('weatherModule').controller('headerController',
 //})()
 
 'use strict'
- angular.module('weatherModule').controller('listController',['$rootScope', 'placesFactory', 'geolocation', function($rootScope, placesFactory, geolocation){
+ angular.module('weatherModule').controller('listController',['$rootScope', 'placesFactory', 'geolocation', '$q', function($rootScope, placesFactory, geolocation, $q){
     var list = this;
 
     list.active = 0;
+    list.places = [];
     list.initialPlaces = ['Mendoza','Lima','San Francisco'];
 
     function addPlace(place, coords){
@@ -56,6 +57,26 @@ angular.module('weatherModule').controller('headerController',
       
     }
 
+    var initFromPlaceList = function(){
+      var deferred = $q.defer();
+
+      for (var i = 0; i < list.initialPlaces.length; i++) {
+        placesFactory.addPlaceByName(list.initialPlaces[i])
+
+        if(i == list.initialPlaces.length -1){
+          deferred.resolve(i);
+        } else {
+          deferred.notify('fetching data.');
+        }
+      }
+
+      return deferred.promise;
+    }
+
+    var initFromGeoLocation = function(){
+
+    }
+
     list.initPlaces = function(){
       for (var i = 0; i < list.initialPlaces.length; i++) {
         placesFactory.addPlaceByName(list.initialPlaces[i])
@@ -65,7 +86,6 @@ angular.module('weatherModule').controller('headerController',
         list.myCoords = {lat:data.coords.latitude, long:data.coords.longitude}
         addPlace(null, list.myCoords)
       });
-
     }
 
   }])
@@ -149,9 +169,35 @@ angular.module('weatherModule').controller('headerController',
     }
   }])
 'use strict'
-angular.module('weatherModule').factory('placesFactory',['$q', 'openWeatherService', function($q, openWeatherService){
-    var places = []
-    var index = 1
+ angular.module('weatherModule').factory('panoramioService',['$http', function($http){
+
+ 	var apiUrl = 'http://www.panoramio.com/map/get_panoramas.php';
+ 	var radius = 0.15;
+	 return {
+	  getCityImage: function(coord) {
+	   
+	   return $http({
+	             url: apiUrl,
+	             method: 'JSONP',
+	             params: {
+	              'set': 'public',
+	              'from': 0, 
+	              'to': 1, 
+	              'size': 'medium', 
+	              'minx':coord.lon - radius,
+	              'maxx':coord.lon + radius,
+	              'miny':coord.lat - radius,
+	              'maxy':coord.lat + radius,
+	              'callback': 'JSON_CALLBACK'
+	             }
+	          });
+	  }
+ 	}
+  }])
+'use strict'
+angular.module('weatherModule').factory('placesFactory',['$q', 'openWeatherService', 'panoramioService', function($q, openWeatherService, panoramioService){
+    var places = [];
+    var index = 1;
 
     var isDuplicate = function(placeName){
       var result = places.filter(function(obj){
@@ -179,13 +225,30 @@ angular.module('weatherModule').factory('placesFactory',['$q', 'openWeatherServi
       });
     },
 
-    parseDataByCoords = function(obj){ //{coords, current, forecast}
+    getCityImage = function(obj){ //{coords, current, forecast}
+      var coords = {};
+      if(obj.current.data.coord){
+        coords = obj.current.data.coord
+      } else {
+        coords = obj.current.data.list[0]['coord']
+      }
+      return panoramioService.getCityImage(coords).then(function(response){
+        obj.cityImage = response
+        return obj
+      });
+    },
+
+    parseDataByCoords = function(obj){ //{coords, current, forecast, cityImage}
+
+    console.log(obj);
 
       var deferred = $q.defer();
 
         if (obj.current.data.cod == 200 && obj.forecast.data.cod == 200){
           places.unshift({
             "id": 0,
+            "img": obj.cityImage.data.photos[0]['photo_file_url'],
+            "isCurrentLocation": true,
             "name": obj.forecast['data']['city']['name'],
             "coords":  obj.coords,
             "state": obj.forecast['data']['list'][1]['weather'][0]['description'],
@@ -225,6 +288,8 @@ angular.module('weatherModule').factory('placesFactory',['$q', 'openWeatherServi
         if (obj.current.data.cod == 200 && obj.forecast.data.cod == 200){
           places.push({
             "id": index,
+            "img": obj.cityImage.data.photos[0]['photo_file_url'],
+            "isCurrentLocation": false,
             "name": obj.current.data.name,
             "coords": obj.current.data.coord,
             "state": obj.forecast.data.list[0]['weather'][0]['description'],
@@ -256,12 +321,14 @@ angular.module('weatherModule').factory('placesFactory',['$q', 'openWeatherServi
       addPlaceByCoords: function(coords){
         return getWeatherByCoords( coords )
         .then( getForecastWeatherByCoords )
+        .then( getCityImage )
         .then( parseDataByCoords );
       },
 
       addPlaceByName: function(cityName){
         return getWeatherByName( cityName )
         .then( getForecastWeatherByName )
+        .then( getCityImage )
         .then( parseDataByName );
       }
 

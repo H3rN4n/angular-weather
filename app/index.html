@@ -37,7 +37,7 @@
   <section id="background" ng-controller="listController as list" ng-init="list.initPlaces()">
     <uib-carousel active="list.active">
       <uib-slide ng-repeat="place in list.places" index="place.id">
-        <div class="blur" style="background-image: url('/img/ba.jpg')"></div>
+        <div ng-show="place.img" class="blur" style="background-image: url('{{place.img}}')"></div>
         <div class="weather">
           <div class="container">
             <div class="row">
@@ -83,5 +83,5 @@
 <script type="text/javascript" src="lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 <script type="text/javascript" src="lib/moment/moment.js"></script>
 <script type="text/javascript" src="lib/angular-moment/angular-moment.js"></script>
-<script type="text/javascript" src="dist/app.js"></script>
+<script type="text/javascript" src="dist/app-debug.js"></script>
 </html>
