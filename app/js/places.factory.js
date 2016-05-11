@@ -1,5 +1,5 @@
 'use strict'
-angular.module('weatherModule').factory('placesFactory',['$q', 'openWeatherService', function($q, openWeatherService){
+angular.module('weatherModule').factory('placesFactory',['$q', 'openWeatherService', 'instagramFactory', function($q, openWeatherService, instagramFactory){
     var places = []
     var index = 1
 
@@ -68,7 +68,7 @@ angular.module('weatherModule').factory('placesFactory',['$q', 'openWeatherServi
       });
     },
 
-    parseDataByName = function(obj){ //{cityName, current, forecast}
+    parseDataByName = function(obj){ //{cityName, current, forecast, placeImage}
       
       var deferred = $q.defer();
 
@@ -94,6 +94,25 @@ angular.module('weatherModule').factory('placesFactory',['$q', 'openWeatherServi
 
     /*END BY NAME*/
 
+    /*GET PLACE IMAGE*/
+    var getPlaceImage = function(obj){ //{cityName, current, forecast}
+      return instagramFactory.getMediaByCoordinates({
+          lat: obj.current.data.coord.lat,
+          lng: obj.current.data.coord.lon,
+          //distance: "<DISTANCE>", // (optional) in meters, default: 1000 
+          count: "1", // (optional) valid values: 1-33 | default: 20 (this parameter maybe don't work correct) 
+          //min_timestamp: "<MIN_TIMESTAMP>", // (optional) 
+          //max_timestamp: "<MAX_TIMESTAMP>", // (optional) 
+          access_token: "<YOUR_ACCESS_TOKEN>",
+      }).then(function(response){
+        obj.placeImage = response
+        console.log(obj)
+        return obj
+      });
+
+    }
+    /*END GET PLACE IMAGE*/
+
     return {
       getPlaces: function(){return places},
       removePlace: function(placeName){
@@ -106,13 +125,15 @@ angular.module('weatherModule').factory('placesFactory',['$q', 'openWeatherServi
       addPlaceByCoords: function(coords){
         return getWeatherByCoords( coords )
         .then( getForecastWeatherByCoords )
-        .then( parseDataByCoords );
+        .then( getPlaceImage )
+        //.then( parseDataByCoords );
       },
 
       addPlaceByName: function(cityName){
         return getWeatherByName( cityName )
         .then( getForecastWeatherByName )
-        .then( parseDataByName );
+        .then( getPlaceImage )
+        //.then( parseDataByName );
       }
 
      }
